@@ -47,15 +47,7 @@ else
 ###Iniciando la base de datos
     systemctl start mariadb
     systemctl enable mariadb
-
- echo -e "\n${LBLUE}Configurando base de datos ...${NC}"
-###Configuracion de la base de datos 
-    mysql -e "
-    CREATE DATABASE devopstravel;
-    CREATE USER 'codeuser'@'localhost' IDENTIFIED BY 'codepass';
-    GRANT ALL PRIVILEGES ON *.* TO 'codeuser'@'localhost';
-    FLUSH PRIVILEGES;"
-fi #cierre condicional
+fi
 
 #apache [WEB]
 
@@ -105,12 +97,23 @@ fi
 # Copiar el contenido de la carpeta app-295devops-travel a /var/www/html
 cp -r $file/$app_path/* /var/www/html
 
-#ejecutar script
-mysql < $file/$app_path/database/devopstravel.sql
+###Configuracion de la base de datos 
+if mysql -e "USE devopstravel;" 2>/dev/null; then
+    echo -e "\n${LGREEN}La base de datos 'devopstravel' ya existe ...${NC}"
+else
+    echo -e "\n${LBLUE}Configurando base de datos ...${NC}"
+    mysql -e "
+    CREATE DATABASE devopstravel;
+    CREATE USER 'codeuser'@'localhost' IDENTIFIED BY 'codepass';
+    GRANT ALL PRIVILEGES ON *.* TO 'codeuser'@'localhost';
+    FLUSH PRIVILEGES;"
+    #ejecutar script
+    mysql < $file/$app_path/database/devopstravel.sql
+end
 
 echo "====================================="
 
 ### reload
 systemctl reload apache2
 
-./discord.sh /$file
+./discord.sh $file
