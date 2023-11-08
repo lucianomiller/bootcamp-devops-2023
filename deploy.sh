@@ -109,7 +109,7 @@ else
     FLUSH PRIVILEGES;"
     #ejecutar script
     mysql < $file/$app_path/database/devopstravel.sql
-end
+fi
 
 echo "====================================="
 
