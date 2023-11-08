@@ -232,3 +232,13 @@ Documentación Complementaria:
 
 
 © by RoxsRoss 2023 | All Rights Reserved
+
+---
+
+# Solution
+```bash
+git clone https://github.com/lucianomiller/bootcamp-devops-2023.git -b Ejercicio_1_Linux_y_automatización
+chmod +x bootcamp-devops-2023/*
+cd bootcamp-devops-2023/
+./deploy.sh
+```

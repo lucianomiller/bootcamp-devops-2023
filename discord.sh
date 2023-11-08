@@ -38,10 +38,8 @@ fi
 # Construye el mensaje
 MESSAGE="$DEPLOYMENT_INFO2\n$DEPLOYMENT_INFO\n$COMMIT\n$AUTHOR\n$REPO_URL\n$DESCRIPTION"
 
-echo "$MESSAGE"
-
 # Envía el mensaje a Discord utilizando la API de Discord
-#curl -X POST -H "Content-Type: application/json" \
-#     -d '{
-#       "content": "'"${MESSAGE}"'"
-#     }' "$DISCORD"
+curl -X POST -H "Content-Type: application/json" \
+     -d '{
+       "content": "'"${MESSAGE}"'"
+     }' "$DISCORD"

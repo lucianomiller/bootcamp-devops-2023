@@ -23,7 +23,7 @@ if [ "${USERID}" -ne 0 ]; then
 fi 
 
 echo "====================================="
-apt-get update -p
+apt-get update
 
 #### git ######
 
@@ -36,6 +36,7 @@ else
     apt install -y git
 fi
 
+echo "====================================="
 
 #### base de datos maria db ######
  
@@ -48,6 +49,8 @@ else
     systemctl start mariadb
     systemctl enable mariadb
 fi
+
+echo "====================================="
 
 #apache [WEB]
 
@@ -62,6 +65,11 @@ else
     mv /var/www/html/index.html /var/www/html/index.html.bkp
 fi
 
+# Verifica si PHP está funcionando correctamente
+php -v
+
+echo "====================================="
+
 # Modificar el archivo dir.conf de Apache
 if [ -f "$config_file" ]; then
     # Realizar los cambios en el archivo dir.conf
@@ -72,17 +80,20 @@ else
     echo "El archivo $config_file no existe. Asegúrate de que Apache esté instalado o de que la ruta sea la correcta."
 fi
 
+echo "====================================="
+
 # Clonar el repositorio
 if [ -d "$file" ]; then
     echo -e "\n${LBLUE}La carpeta $file existe ...${NC}"
-    git pull --single-branch --branch $branch
+    git pull
 else
     git clone $repo --single-branch --branch $branch
 fi
 
 echo -e "\n${LYELLOW}instalando WEB ...${NC}"
 sleep 1
-#git clone $repo --branch $branch --single-branch
+
+echo "====================================="
 
 # Insertar password en el archivo config.php
 if [ ! -f "$db_php" ]; then
@@ -97,6 +108,8 @@ fi
 # Copiar el contenido de la carpeta app-295devops-travel a /var/www/html
 cp -r $file/$app_path/* /var/www/html
 
+echo "====================================="
+
 ###Configuracion de la base de datos 
 if mysql -e "USE devopstravel;" 2>/dev/null; then
     echo -e "\n${LGREEN}La base de datos 'devopstravel' ya existe ...${NC}"
@@ -107,6 +120,7 @@ else
     CREATE USER 'codeuser'@'localhost' IDENTIFIED BY 'codepass';
     GRANT ALL PRIVILEGES ON *.* TO 'codeuser'@'localhost';
     FLUSH PRIVILEGES;"
+
     #ejecutar script
     mysql < $file/$app_path/database/devopstravel.sql
 fi
@@ -116,4 +130,6 @@ echo "====================================="
 ### reload
 systemctl reload apache2
 
-./discord.sh $file
+echo "====================================="
+
+./discord.sh $(pwd)
